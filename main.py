@@ -20,13 +20,12 @@ no_auth_paths = ['/', '/filter']
 
 @app.before_request
 async def before():
-    req = request
     # check for a blueprint, makes sure we have a route
-    if req.blueprint is not None and req.path not in no_auth_paths:
-        if 'Authorization' not in req.headers:
+    if request.blueprint is not None and request.path not in no_auth_paths:
+        if 'Authorization' not in request.headers:
             abort(401, 'Not Authorized')
             return
-        auth_header = req.headers.get('Authorization')
+        auth_header = request.headers.get('Authorization')
 
         if auth_header != 'TODO: store key':
             abort(401, 'Not Authorized')
