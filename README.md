@@ -1,3 +1,9 @@
+# flipnote
+A fork of AlexFlipnote's api archive hosted on https://flipnote.duncte.bot/
+
+This project was created for internal use and will be provided as is.
+
+
 # alex_api_archive
 Archive of the image generator stuff from my API
 

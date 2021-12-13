@@ -1,24 +1,41 @@
 import importlib
 import os
 
-from quart import Quart, jsonify
+from quart import Quart, jsonify, abort, request
 
 app = Quart(__name__)
 
 # Get all endpoints
-for file in os.listdir("render"):
-    if file.endswith(".py"):
+for file in os.listdir('render'):
+    if file.endswith('.py'):
         lib = importlib.import_module(f"render.{file[:-3]}")
-        app.register_blueprint(getattr(lib, "blueprint"))
+        app.register_blueprint(getattr(lib, 'blueprint'))
 
 
-for blpr in app.iter_blueprints():
-    print(blpr)
+# for blpr in app.iter_blueprints():
+#     print(blpr)
+
+no_auth_paths = ['/', '/filter']
+
+
+@app.before_request
+async def before():
+    req = request
+    # check for a blueprint, makes sure we have a route
+    if req.blueprint is not None and req.path not in no_auth_paths:
+        if 'Authorization' not in req.headers:
+            abort(401, 'Not Authorized')
+            return
+        auth_header = req.headers.get('Authorization')
+
+        if auth_header != 'TODO: store key':
+            abort(401, 'Not Authorized')
 
 
 @app.route('/')
 def home():
     # TODO: automate this
+    # text in function can be obtained via __doc__
     return jsonify({
         "endpoints": [
             "GET /achievement?text=text[&icon=int]",
