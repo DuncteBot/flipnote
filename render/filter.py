@@ -1,6 +1,6 @@
 import os
-import wand
-import wand.image
+# import wand
+# import wand.image
 import random
 
 from io import BytesIO
