@@ -3,6 +3,8 @@ import os
 
 from quart import Quart, jsonify, abort, request
 
+api_keys = os.getenv('API_KEYS').split(',')
+
 app = Quart(__name__)
 
 # Get all endpoints
@@ -27,7 +29,7 @@ async def before():
             return
         auth_header = request.headers.get('Authorization')
 
-        if auth_header != 'TODO: store key':
+        if auth_header not in api_keys:
             abort(401, 'Not Authorized')
 
 
@@ -65,4 +67,5 @@ def home():
     })
 
 
-app.run()
+if __name__ == "__main__":
+    app.run()
