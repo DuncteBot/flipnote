@@ -3,7 +3,7 @@ import os
 
 from quart import Quart, jsonify, abort, request
 
-api_keys = os.getenv('API_KEYS').split(',')
+api_keys = os.getenv('API_KEYS', 'hello_world').split(',')
 
 app = Quart(__name__)
 

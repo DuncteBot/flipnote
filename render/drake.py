@@ -1,28 +1,33 @@
-import textwrap
-
+from utils.textbox import TextBox
 from io import BytesIO
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image
 from quart import Blueprint, request, send_file, abort
 
 blueprint = Blueprint('drake', __name__)
 
 
 def create_drake(top, bottom, image_template: str = None):
-    top_text = textwrap.fill(top, 13)
-    bottom_text = textwrap.fill(bottom, 13)
-
     b = BytesIO()
     template_use = image_template if image_template else 'template.jpg'
+    font_size = 35
+    font_path = "assets/_fonts/verdana_edited.ttf"
     base = Image.open(f"assets/drake/{template_use}").convert("RGBA")
+    [_, img_height] = base.size
     txtO = Image.new("RGBA", base.size, (255, 255, 255, 0))
-    font = ImageFont.truetype("assets/_fonts/verdana_edited.ttf", 35)
 
-    top_pos = 85 + (-12 * len(top_text.split("\n")) + 10)
-    bottom_pos = 335 + (-12 * len(bottom_text.split("\n")) + 10)
+    top_box = TextBox(txtO)
+    top_box.set_font(font_path, font_size)
+    # top_box.set_background_color("White")
+    top_box.set_box(250, 0, 250, img_height // 2 + 5)
 
-    canv = ImageDraw.Draw(txtO)
-    canv.text((250, top_pos), top_text, font=font, fill="Black")
-    canv.text((250, bottom_pos), bottom_text, font=font, fill="Black")
+    top_box.draw(top)
+
+    bottom_box = TextBox(txtO)
+    bottom_box.set_font(font_path, font_size)
+    # bottom_box.set_background_color("Lime")
+    bottom_box.set_box(250, 258, 250, img_height // 2 + 5)
+
+    bottom_box.draw(bottom)
 
     out = Image.alpha_composite(base, txtO)
 
